@@ -13,6 +13,7 @@
 
 
 	Requirements
+	------------
 
 ksh (Korn Shell)
 
@@ -31,11 +32,12 @@ else just copy the file from a cluster node.
 
 
 	Configurantion example
+	----------------------
 
 
 Create clsmon user
 
-# useradd -c "CLSMON user" -m clsmon
+ useradd -c "CLSMON user" -m clsmon
 
 
 httpd configuration example for Apache 1.x - 2.3
@@ -47,7 +49,7 @@ Alias /clsmon/ /home/clsmon/www/clsmon/
     Allow from all
 </Directory>
 
-# CGI-BIN
+ CGI-BIN
 ScriptAlias /clsmon-cgi/ /home/clsmon/www/clsmon/clsmon-cgi/
 <Directory /home/clsmon/www/clsmon/clsmon-cgi>
     AllowOverride None
@@ -56,6 +58,8 @@ ScriptAlias /clsmon-cgi/ /home/clsmon/www/clsmon/clsmon-cgi/
     Allow from all
 </Directory>
 
+	Variables
+	---------
 
 You may have to alter some variables in your script to appropriate values.
 
@@ -64,6 +68,8 @@ NODES="node1 192.168.1.1"
 HACMPDEFS="/hacmp.defs" --> path to hacmp.defs file (needed only in AIX)
 CGIFILE="/home/clsmon/www/clsmon/clsmon-cgi/`basename ${0}|cut -d "." -f 1`.cgi" --> path to cgi directory
 
+	Run
+	---
 
 Put your scripts at clsmon home and execute them.
 

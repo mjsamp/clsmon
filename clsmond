@@ -1,0 +1,71 @@
+#!/bin/bash
+
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+RETVAL=0
+STOP_TIMEOUT=${STOP_TIMEOUT-10}
+
+
+SCRIPTHOME="/home/clsmon"
+SCRIPTS=`ls $SCRIPTHOME`
+
+
+start() {
+	echo -n $"Starting $1: "
+		$SCRIPTHOME/$1 & 
+		echo $! > $2
+		RETVAL=$?
+		echo
+		[ $RETVAL = 0 ] && touch $3
+		return $RETVAL
+}
+
+stop() {
+	echo -n $"Stoping $1: "
+		killproc -p $2 -d ${STOP_TIMEOUT} $SCRIPTHOME/$1
+		RETVAL=$?
+		echo
+		[ $RETVAL = 0 ] && rm -f $2 $3
+}
+
+
+case "$1" in
+start)
+	for i in $SCRIPTS
+	do
+        pidfile=${PIDFILE-/tmp/$i.pid}
+        lockfile=${LOCKFILE-/tmp/$i.lock}
+    		start $i ${pidfile} ${lockfile} 2>&1 > /dev/null &
+	done
+    ;;
+stop)
+	for i in $SCRIPTS
+	do
+	pidfile=${PIDFILE-/tmp/$i.pid}
+	lockfile=${LOCKFILE-/tmp/$i.lock}
+		stop $i ${pidfile} ${lockfile} 2>&1 > /dev/null &
+	done
+    ;;
+restart)
+	for i in $SCRIPTS
+        do
+	pidfile=${PIDFILE-/tmp/$i.pid}
+       	lockfile=${LOCKFILE-/tmp/$i.lock}
+        	cat ${pidfile} > /tmp/$i.old
+        	start $i ${pidfile} ${lockfile} 2>&1 > /dev/null &
+        	stop $i /tmp/$i.old 2>&1 > /dev/null &
+	done	
+
+    ;;
+reload-script)
+	pidfile=${PIDFILE-/tmp/$2.pid}
+        lockfile=${LOCKFILE-/tmp/$2.lock}
+	cat ${pidfile} > /tmp/$2.old
+	start $2 ${pidfile} ${lockfile} 2>&1 > /dev/null &
+	stop $2 /tmp/$2.old 2>&1 > /dev/null &
+	;;
+*)
+    echo "usage: $0 (start|stop|restart)"
+esac
