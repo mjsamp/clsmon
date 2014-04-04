@@ -251,21 +251,21 @@ i=$((i+1))
 `IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 2|resGroupNodeState.$i.$node_id = 2" > /dev/null 2>&1`
 if [ $? -eq 0 ];then
 
-	echo "	"$($SNMPCMD $1 $RG_NAME | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: ONLINE
+	echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: ONLINE
 
 fi
 
 `IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 32|resGroupNodeState.$i.$node_id = 32" > /dev/null 2>&1`
 if [ $? -eq 0 ];then
 
-	echo "	"$($SNMPCMD $1 $RG_NAME | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: LEAVING
+	echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: LEAVING
 
 fi
 
 `IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 16|resGroupNodeState.$i.$node_id = 16" > /dev/null 2>&1`
 if [ $? -eq 0 ];then
 
-	echo "	"$($SNMPCMD $1 $RG_NAME | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: JOINING
+	echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: JOINING
 
 fi
 
@@ -273,7 +273,7 @@ if [ $OFFLINE = "TRUE" ]; then
 	`IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 4|resGroupNodeState.$i.$node_id = 4" > /dev/null 2>&1`
 	if [ $? -eq 0 ];then
 
-		echo "	"$($SNMPCMD $1 $RG_NAME | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: OFFLINE
+		echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: OFFLINE
 
 	fi
 fi
