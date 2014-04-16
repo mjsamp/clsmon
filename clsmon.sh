@@ -37,7 +37,7 @@ usage()
 #*******************Please Alter the VARs below as appropriate*****
 
 COMMUNITY="public"
-NODES="9.86.72.105 9.86.72.109"
+NODES="node1 node2"
 OSTYPE=`uname`
 HACMPDEFS="/hacmp.defs"
 
