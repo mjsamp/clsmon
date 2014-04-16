@@ -9,8 +9,8 @@
 #	1/. Designed to be configurable by the end user
 #	2/. Cmd line script, produces both text std out and cgi
 #	3/. Output can be changed by to remove network/address information [-n]
-#	    and showing offline Resource Groups [-o]
-#	4/. Runs on Linux and AIX
+#	    and show offline Resource Groups [-o]
+#	4/. Run on Linux and AIX
 #
 #	Based on LiveHA - http://www.powerha.lpar.co.uk
 # 
@@ -23,7 +23,7 @@
 usage()
 {
     printf "Usage: $PROGNAME [-n]\n"
-    printf "\t-o Shows offline Resource Groups\n" 
+    printf "\t-o Show offline Resource Groups\n" 
     printf "\t-n Omit Network info\n" 
     exit 1
 }
@@ -37,7 +37,7 @@ usage()
 #*******************Please Alter the VARs below as appropriate*****
 
 COMMUNITY="public"
-NODES="node1 node2"
+NODES="9.86.72.105 9.86.72.109"
 OSTYPE=`uname`
 HACMPDEFS="/hacmp.defs"
 
@@ -464,35 +464,6 @@ print_node_info $1
 }
 
 
-get_snmp_data ()
-{
-
-	LOGFILE="/tmp/$1.qhaslog"
-	HTMLFILE="/tmp/$1.qhashtml"
-	CGIFILE="/usr/IBMAHS/cgi-bin/`basename ${0}|cut -d "." -f 1`.cgi"
-	STATFILE="/tmp/$1.aastat"
-   	
-
-  	CLUSTER_MIB=$($SNMPCMD $1 1.3.6.1.4.1.2.3.1.2.1.5 2> /dev/null)
-  
-	  # is there any snmp info?
-	  snmpinfocheck=`echo $CLUSTER_MIB | egrep "$CLUSTER_BRANCH|^cluster"`
-	  if [[ $? -eq 0 && $snmpinfocheck != "" ]]; then
-	  		
-                print_cluster_info $1 > $LOGFILE
-                cat $LOGFILE 
-		cp $LOGFILE $HTMLFILE
-          else
-                echo "Data unavailable on NODE: $1 
-		$(date +%d" "%b" "%y" "%T)
-		Check cluster node state" | tee $HTMLFILE
-		#service clsmon reload-script `basename $0` &
-          fi
-
-	format_cgi
-
-}
-
 
 get_node ()
 {
@@ -501,15 +472,36 @@ get_node ()
         while [ $# -ne 0 ]
         do
         	ping -w 3 -c 1 $1 > /dev/null 2>&1
-        	if [ $? -eq 0 ]; then
-        		get_snmp_data $1
+        	if [ $? -eq 0 ]; then        	
+        		CLUSTER_MIB=$($SNMPCMD $1 1.3.6.1.4.1.2.3.1.2.1.5 2> /dev/null)
+        		LOGFILE="/tmp/$1.qhaslog"
+			HTMLFILE="/tmp/$1.qhashtml"
+			CGIFILE="/usr/IBMAHS/cgi-bin/`basename ${0}|cut -d "." -f 1`.cgi"
+			STATFILE="/tmp/$1.aastat"
+        		
+        		# is there any snmp info?
+	  		snmpinfocheck=`echo $CLUSTER_MIB | egrep "$CLUSTER_BRANCH|^cluster"`
+	  		if [[ $? -eq 0 && $snmpinfocheck != "" ]]; then
+                		print_cluster_info $1 > $LOGFILE
+                		cat $LOGFILE 
+				cp $LOGFILE $HTMLFILE
+          		else
+                		echo "Data unavailable on NODE: $1 
+				$(date +%d" "%b" "%y" "%T)
+				Check cluster node state" | tee $HTMLFILE
+				#service clsmon reload-script `basename $0` &
+				shift
+          		fi
+
+			format_cgi
         	else
-        		VALUES+="$1 "
+        		VALUES="$VALUES $1 "
         		shift   
         	fi
         done
         
-        echo "Warning: nodes $VALUES are not responding." | tee $HTMLFILE
+        echo "Warning: nodes $VALUES are not responding.
+        	$(date +%d" "%b" "%y" "%T)" | tee $HTMLFILE
         
 
 }
