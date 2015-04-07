@@ -49,7 +49,8 @@ Alias /clsmon/ /home/clsmon/www/clsmon/
     Allow from all
 </Directory>
 
- CGI-BIN
+#CGI-BIN
+ 
 ScriptAlias /clsmon-cgi/ /home/clsmon/www/clsmon/clsmon-cgi/
 <Directory /home/clsmon/www/clsmon/clsmon-cgi>
     AllowOverride None
