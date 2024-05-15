@@ -1,7 +1,6 @@
-       
-  Secure remote PowerHA cluster status monitor which  provides a different degree of flexibility than clstat.
+  # Cluster Monitor
   
-  Produces both text stdout and Web.
+  Secure remote PowerHA cluster status monitor similar to clstat that produces both text stdout and Web.
   Runs on Linux and AIX.
  
  	Based on LiveHA - http://www.powerha.lpar.co.uk
@@ -9,11 +8,11 @@
  
   Version:  1.000 
  
-  Author:   Marcos Jean Sampaio - msampaio@br.ibm.com/mjsamp@gmail.com
+  Author:   Marcos Jean Sampaio - mjsamp@gmail.com
 
 
-	Requirements
-	------------
+  ## Requirements
+
 
 ksh (Korn Shell)
 
@@ -31,17 +30,17 @@ If it has PowerHA installed you'll find it at
 else just copy the file from a cluster node.
 
 
-	Configurantion example
-	----------------------
+  ## Configurantion example
 
 
 Create clsmon user
-
+```bash
  useradd -c "CLSMON user" -m clsmon
-
+```
 
 httpd configuration example for Apache 1.x - 2.3
 
+```bash
 Alias /clsmon/ /home/clsmon/www/clsmon/
 <Directory /home/clsmon/www/clsmon/>
     Options Indexes FollowSymLinks Includes MultiViews
@@ -58,29 +57,22 @@ ScriptAlias /clsmon-cgi/ /home/clsmon/www/clsmon/clsmon-cgi/
     Order allow,deny
     Allow from all
 </Directory>
-
-	Variables
-	---------
+```
+  ## Variables
 
 You may have to alter some variables in your script to appropriate values.
 
+```bash
 COMMUNITY="public"
 NODES="node1 192.168.1.1"
 HACMPDEFS="/hacmp.defs" --> path to hacmp.defs file (needed only in AIX)
 CGIFILE="/home/clsmon/www/clsmon/clsmon-cgi/`basename ${0}|cut -d "." -f 1`.cgi" --> path to cgi directory
+```bash
 
-	Run
-	---
+  ## Run
 
 Put your scripts at clsmon home and execute them.
 
 You can access the web interface at
 
 http://your_web_server/clsmon-cgi/script_name.cgi
-
-
-
-
-
-
-
