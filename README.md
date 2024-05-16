@@ -137,3 +137,13 @@ stopsrc -s clinfoES
 startsrc -s clinfoES
 ```
 ![IMAGE ALT TEXT HERE](https://github.com/mjsamp/clsmon/blob/master/images/Screenshot%20at%202024-05-15%2016-05-38.png)
+
+## Buy me a coffee
+
+BTC bc1qd7c9mcvs0dgpd2nv59jsmm2j3qzjhq4a7mramu
+
+ETH 0x7cF556FFA4F3ffD57554D89A19DD92F546598544
+
+LTC LTJwUWPLdDDgK8AYNb419C7UGZgpxuy9qK
+
+DOGE DUBiQaGs4WKJFNc6Adq86QWU3aXgBJR3zW
