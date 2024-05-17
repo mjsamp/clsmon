@@ -114,7 +114,7 @@ snmpinfo -m dump -t 1 -v -c public -o /usr/es/sbin/cluster/hacmp.defs -h node01
 
 Sometimes, even after doing this, it still doesn't work. Make sure that this COMMUNITY entry is present in /etc/snmpdv3.conf:
 ```bash
-COMMUNITY public plubic noAuthNoPriv 0.0.0.0 0.0.0.0 -
+COMMUNITY public public noAuthNoPriv 0.0.0.0 0.0.0.0 -
 ```
 
 Then reconfigure and refresh the services
