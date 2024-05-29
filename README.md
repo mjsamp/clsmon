@@ -26,7 +26,7 @@ snmpinfo (AIX)
 
 The file hacmp.defs (only AIX)
 
-You will find it in a PowerHA node on the following path so you can make a copy of it:
+You will find it in a PowerHA node on the following path so you can copy it:
 ```bash
 /usr/es/sbin/cluster/hacmp.defs
 ```
@@ -40,7 +40,7 @@ Alias /clsmon /var/www/clsmon
 
 ## Variables
 
-You should alter some variables in your script to appropriate values according to your environment.
+Replace variables in your script to appropriate values according to your environment.
 
 ```bash
 COMMUNITY="public"
@@ -52,7 +52,7 @@ HTMLFILE="/var/www/clsmon/$cluster_name.html"
 
 ## Run
 
-Run the script then you can access the web interface at
+Run the script then access the web interface at this path as an example:
 
 https://your_web_server/clsmon/aix_cluster.html
 
