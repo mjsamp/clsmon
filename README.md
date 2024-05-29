@@ -2,14 +2,14 @@
        
   # Remote PowerHA cluster status monitor
   
-  Provides both text stdout and Web.
+  Provides both text stdout and Web only using snmp traps.
 
   Runs on Linux and AIX.
  
  	Based on LiveHA - http://www.powerha.lpar.co.uk
   
  
-  Version:  1.0
+  Version:  2.0
  
   Author:   Marcos Jean Sampaio - mjsamp@gmail.com
 
@@ -18,7 +18,7 @@
 
 ksh (Korn Shell)
 
-HTTPD Server with cgi support (tested in apache only)
+HTTP Server (tested in apache only)
 
 snmpwalk (Linux)
 
@@ -26,40 +26,16 @@ snmpinfo (AIX)
 
 The file hacmp.defs (only AIX)
 
-If it has PowerHA installed you'll find it at 
-
-/usr/es/sbin/cluster/hacmp.defs
-
-or just copy the file from a cluster node.
-
-
-## HTTP Configurantion example
-
-
-Create clsmon user
-
+You will find it in a PowerHA node on the following path so you can make a copy of it:
 ```bash
- useradd -c "CLSMON user" -m clsmon
+/usr/es/sbin/cluster/hacmp.defs
 ```
 
-httpd configuration example for Apache 1.x - 2.3
-
+## HTTP Configurantion example
+Considering you have an up and running Apache server on your machine add the following line to your http configuration file: 
 ```bash
-Alias /clsmon/ /home/clsmon/www/clsmon/
-<Directory /home/clsmon/www/clsmon/>
-    Options Indexes FollowSymLinks Includes MultiViews
-    Order allow,deny
-    Allow from all
-</Directory>
+Alias /clsmon /var/www/clsmon
 
- #CGI-BIN
-ScriptAlias /clsmon-cgi/ /home/clsmon/www/clsmon/clsmon-cgi/
-<Directory /home/clsmon/www/clsmon/clsmon-cgi>
-    AllowOverride None
-    Options ExecCGI Includes FollowSymLinks
-    Order allow,deny
-    Allow from all
-</Directory>
 ```
 
 ## Variables
@@ -70,16 +46,15 @@ You should alter some variables in your script to appropriate values according t
 COMMUNITY="public"
 NODES="node1 192.168.1.1"
 HACMPDEFS="/hacmp.defs" --> path to hacmp.defs file (needed only in AIX)
-CGIFILE="/home/clsmon/www/clsmon/clsmon-cgi/`basename ${0}|cut -d "." -f 1`.cgi" --> path to cgi directory
+cluster_name="aix_cluster"
+HTMLFILE="/var/www/clsmon/$cluster_name.html"
 ```
 
 ## Run
 
-Put your scripts at clsmon home and execute them.
+Run the script then you can access the web interface at
 
-You can access the web interface at
-
-http://your_web_server/clsmon-cgi/script_name.cgi
+https://your_web_server/clsmon/aix_cluster.html
 
 
 ##
@@ -136,7 +111,7 @@ startsrc -s hostmibd
 stopsrc -s clinfoES
 startsrc -s clinfoES
 ```
-![IMAGE ALT TEXT HERE](https://github.com/mjsamp/clsmon/blob/master/images/Screenshot%20at%202024-05-15%2016-05-38.png)
+![IMAGE ALT TEXT HERE](./images/Screenshot%20at%202024-05-29%2015-51-51.png)
 
 ## Buy me a coffee
 
