@@ -113,6 +113,9 @@ startsrc -s clinfoES
 ```
 ![IMAGE ALT TEXT HERE](./images/Screenshot%20at%202024-05-29%2015-51-51.png)
 
+Watch it in action.\
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/x7CUh0MCn38/0.jpg)](https://www.youtube.com/watch?v=x7CUh0MCn38)\
+
 ## Buy me a coffee
 
 BTC bc1qd7c9mcvs0dgpd2nv59jsmm2j3qzjhq4a7mramu
