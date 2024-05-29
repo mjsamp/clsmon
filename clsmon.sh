@@ -7,7 +7,7 @@
 # Description: An 'clstat' alternative monitoring script. See Usage.
 # Differences to clstat :	
 #	1/. Designed to be configurable by the end user
-#	2/. Cmd line script, produces both text std out and cgi
+#	2/. Cmd line script, produces both text std out and Web html
 #	3/. Output can be changed by to remove network/address information [-n]
 #	    and show offline Resource Groups [-o]
 #	4/. Run on Linux and AIX
@@ -15,9 +15,9 @@
 #	Based on LiveHA - http://www.powerha.lpar.co.uk
 # 
 #
-# Version:  1.000 
+# Version:  2.000 
 #
-# Author:   Marcos Jean Sampaio - msampaio@br.ibm.com/mjsamp@gmail.com
+# Author:   Marcos Jean Sampaio - mjsamp@gmail.com
 ###############################################################################
 
 usage()
@@ -37,9 +37,11 @@ usage()
 #*******************Please Alter the VARs below as appropriate*****
 
 COMMUNITY="public"
-NODES="node1 node2"
+NODES="192.168.123.100 192.168.123.102"
 OSTYPE=`uname`
 HACMPDEFS="/hacmp.defs"
+cluster_name="aix_cluster"
+HTMLFILE="/var/www/clsmon/$cluster_name.html"
 
 #******ONLY alter the code below this line, if you want to change******
 #********************this behaviour of this script*********************
@@ -110,75 +112,6 @@ case $OSTYPE in
 esac
 
 
-  
-
-###############################################################################
-# 
-#  Name: format_cgi
-#
-#  Create the cgi (on the fly!)
-#
-###############################################################################
-format_cgi()
-{
-
-echo '#!/usr/bin/ksh
-print "Content-type: text/html\n";' > $CGIFILE
-
-ex -s $CGIFILE <<EOF
-a
-
-cat $HTMLFILE | sed '1s:^:<h3>:' | sed '1s:$:</h3>:' | sed 's:UNSTABLE:<font color="#FDD017"><blink>UNSTABLE</blink><font color="#ffffff">:g'| sed 's:JOINING:<font color="#FDD017"><blink>JOINING</blink><font color="#ffffff">:g' | sed 's:LEAVING:<font color="#FDD017"><blink>LEAVING</blink><font color="#ffffff">:g' | sed 's: STABLE:<font color="#00FF00"> STABLE<font color="#ffffff">:g' | sed 's/qn:/<font color="#2B65EC">qn:<font color="#ffffff">/g' | sed 's:UP:<font color="#00FF00">UP<font color="#ffffff">:g' | sed 's:DOWN:<font color="#FF0000"><blink>DOWN</blink><font color="#ffffff">:g'| sed 's:ONLINE:<font color="#00FF00">ONLINE<font color="#ffffff">:g' | sed 's:OFFLINE:<font color="#0000FF"><blink>OFFLINE</blink><font color="#ffffff">:g' > $STATFILE
-
-grep DOWN $HTMLFILE > /dev/null
-if [ "\$?" -eq 0 ];then
-echo "<audio autoplay loop>
-<source src="../tos-redalert.wav" />
-<audio/>" >> $STATFILE
-fi
-
-cat << EOM
-<HTML>
-<META HTTP-EQUIV="REFRESH" CONTENT="10">
-<HEAD><TITLE>Cluster Status Monitor</TITLE>
-<script type="text/javascript">
-<!--
-t=500;
-na=document.all.tags("blink");
-flag=1;
-bringBackBlinky();
-function bringBackBlinky() {
-if (flag == 1) {
-show="visible";
-flag=0;
-}
-else {
-show="hidden";
-flag=1;
-}
-for(i=0;i<na.length;i++) {
-na[i].style.visibility=show;
-}
-setTimeout("bringBackBlinky()", t);
-}
--->
-</script>
-<BODY COLOR="#ffffff" LINK="red" VLINK="blue" BGCOLOR="#000000">
-<PRE>
-<font COLOR="#ffffff">
-<HR SIZE=3>
-<font size="3.5"><font face="verdana">
-<div style="padding-left: 11em;">
-EOM
-cat $STATFILE
-echo "<div/>"
-.
-wq
-EOF
-chmod 755 $CGIFILE
-
-}
-
 ###############################################################################
 # 
 #  Name: print_address_info
@@ -208,18 +141,26 @@ print_address_info()
 	    address_label=$(echo "$ADDRESS_MIB_FUNC" | egrep -w "$ADDRESS_LABEL.$node_id.$address|addrLabel.$node_id.$address" | cut -f2 -d\")
 	    address_state=$(echo "$ADDRESS_MIB_FUNC" | egrep -w "$ADDRESS_STATE.$node_id.$address|addrState.$node_id.$address" | cut -f3 -d" ")
 	    printf "\t%-15s %-20s " $address $address_label
+	    table+='
+	      <tr>
+            <td class="tg-f4iu">'$address' '$address_label'</td>
+	    '
  
             case $address_state in
                 2)
 		  printf "UP\n"
+		  table+='<td class="tg-7f8f">UP</td>'
                   ;;
                 4)
 		  printf "DOWN\n"
+		  table+='<td class="tg-4rdo">DOWN</td>'
                   ;;
                 *)
 		  printf "UNKNOWN\n"
+		  table+='<td class="tg-io23">UNKNOWN</td>'
                   ;;
             esac
+            table+='</tr>'
         fi
     fi
 
@@ -238,42 +179,75 @@ print_rg_info()
 
 RG_MIB_FUNC=$CLUSTER_MIB
 
-echo ""
-echo "  Resource Groups :" 
+
 
 RGS_COUNT=$($SNMPCMD $1 $RG_NAME | wc -l)
+if [[ $RGS_COUNT -gt 0 ]];then
+    echo ""
+    echo "  Resource Groups :"
+        table+='
+        <tr>
+            <td class="tg-12d8">Resourse Groups:</td>
+            <td class="tg-12d8"></td>
+        '
+fi
+
 i=0
 while [[ $i -le $RGS_COUNT ]]
 do
 
 i=$((i+1))
 
+    rgname=$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g')
+
 `IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 2|resGroupNodeState.$i.$node_id = 2" > /dev/null 2>&1`
 if [ $? -eq 0 ];then
 
-	echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: ONLINE
+	echo "	"$rgname "	"State: ONLINE
+		table+='
+	      <tr>
+            <td class="tg-f4iu">'$rgname'</td>
+            <td class="tg-7f8f">ONLINE</td>
+          </tr>
+	    '
 
 fi
 
 `IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 32|resGroupNodeState.$i.$node_id = 32" > /dev/null 2>&1`
 if [ $? -eq 0 ];then
-
-	echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: LEAVING
-
+    
+	echo "	"$rgname "	"State: LEAVING
+		table+='
+	      <tr>
+            <td class="tg-f4iu">'$rgname'</td>
+            <td class="tg-io23">LEAVING</td>
+          </tr>
+	    '
 fi
 
 `IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 16|resGroupNodeState.$i.$node_id = 16" > /dev/null 2>&1`
 if [ $? -eq 0 ];then
 
-	echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: JOINING
-
+	echo "	"$rgname "	"State: JOINING
+		table+='
+	      <tr>
+            <td class="tg-f4iu">'$rgname'</td>
+            <td class="tg-io23">JOINING</td>
+          </tr>
+	    '
 fi
 
 if [ $OFFLINE = "TRUE" ]; then
 	`IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NODE_STATE.$i.$node_id = 4|resGroupNodeState.$i.$node_id = 4" > /dev/null 2>&1`
 	if [ $? -eq 0 ];then
 
-		echo "	"$(IFS="\n"; echo $RG_MIB_FUNC | egrep "$RG_NAME.$i|resGroupName.$i" | awk '{print $3}' | sed 's/"//g') "	"State: OFFLINE
+		echo "	"$rgname "	"State: OFFLINE
+		table+='
+	      <tr>
+            <td class="tg-f4iu">'$rgname'</td>
+            <td class="tg-4rdo">OFFLINE</td>
+          </tr>
+	    '
 
 	fi
 fi
@@ -307,24 +281,33 @@ print_network_info()
     formatted_network_name=$(echo "$network_name" | awk '{printf  "%-18s", $1}')
 
     printf "  Network : $formatted_network_name State: " "$formatted_network_name"
+    table+='
+    <tr>
+        <td class="tg-12d8">Network: '$formatted_network_name'</td>
+    '
     case $network_state in
         2)
 	  printf "UP\n"
+	  table+='<td class="tg-m7lx">UP</td>'
           ;;
         4)
 	  printf "DOWN\n"
+	  table+='<td class="tg-4rdo">DOWN</td>'
           ;;
         32)
 	  printf "JOINING\n"
+	  table+='<td class="tg-io23">JOINING<br></td>'
           ;;
         64)
 	  printf "LEAVING\n"
+	  table+='<td class="tg-io23">LEAVING<br></td>'
           ;;
         *)
 	  printf "N/A\n"
+	  table+='<td class="tg-io23">N/A<br></td>'
           ;;
     esac
-
+    table+='</tr>'
     PRINT_IP_ADDRESS="true"
 
     # If serial type network, then don't attempt to print IP Address
@@ -375,21 +358,31 @@ print_node_info()
 
     echo ""
     printf "Node : $formatted_node_name State: " "$formatted_node_name"
+    table+='
+    <tr>
+        <td class="tg-njvp">Node: '$formatted_node_name'</td>
+    '
 
     case $node_state in
         2)
 	  printf "UP $finternal_state\n"
+	  table+='<td class="tg-6ug1"><span style="background: #56CA36;padding: 2px;color: black">UP</span></td>'
           ;;
         4)
 	  printf "DOWN $finternal_state\n"
+	  table+='<td class="tg-qrnh"><span style="background: red;padding: 2px;color: white">DOWN</span></td>'
           ;;
         32)
 	  printf "JOINING $finternal_state\n"
+	  table+='<td class="tg-io23"><span style="background: yellow;padding: 2px;color: black">JOINING</span></td>'
           ;;
         64)
 	  printf "LEAVING $finternal_state\n"
+	  table+='<td class="tg-io23"><span style="background: yellow;padding: 2px;color: black">LEAVING</span></td>'
           ;;
     esac
+    
+      table+='</tr>'
     
     NETWORK_MIB_FUNC=$NETWORK_MIB #`echo "$NETWORK_MIB" | egrep "$NETWORK_BRANCH\..\.$node_id|net*\..\.$node_id"`
     ADDRESS_MIB_FUNC=$ADDRESS_MIB #`echo "$ADDRESS_MIB" | egrep "$ADDRESS_BRANCH\..\.$node_id|addr*\..\.$node_id"`
@@ -419,6 +412,8 @@ print_cluster_info ()
   HANODE=$1
 
   cluster_name=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_NAME\.0|clusterName.0" | cut -f2 -d\")
+  
+if [[ $cluster_name != "" ]]; then
 
   cluster_state=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_STATE\.0|clusterState.0" | cut -f3 -d" ")
   cluster_substate=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_SUBSTATE\.0|clusterSubState.0" | cut -f3 -d" ")
@@ -426,40 +421,97 @@ print_cluster_info ()
   case $cluster_state in
 	2)
 	  cs="UP"
+	  csb="#56CA36"
 	  ;;
 	4)
 	  cs="DOWN"
+	  csb="red"
 	  ;;
   esac
 
   case $cluster_substate in
 	4)
 	  css="DOWN"
+	  cssb="red"
 	  ;;
 	8)
 	  css="UNKNOWN"
+	  cssb="yellow"
 	  ;;
 	16)
 	  css="UNSTABLE"
+	  cssb="yellow"
 	  ;;
 	2 | 32)
 	  css="STABLE"
+	  cssb="#56CA36"
 	  ;;
 	64)
 	  css="ERROR"
+	  cssb="red"
 	  ;;
 	128)
 	  css="RECONFIG"
+	  cssb="yellow"
 	  ;;
   esac
 
-echo "Status for $cluster_name on $(date +%d" "%b" "%y" "%T)" 
-echo  "Cluster is ($cs & $css)    qn: $HANODE" 
+echo "Status for $cluster_name on $(date +%b" "%d" "%T)" 
+echo  "Cluster is ($cs & $css)    qn: $HANODE"
+
+table='
+<HTML>
+<META HTTP-EQUIV="REFRESH" CONTENT="5">
+<HEAD><TITLE>Cluster Status Monitor</TITLE>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-color:#9ABAD9;border-spacing:0;border-style:solid;border-width:1px;}
+.tg td{background-color:#EBF5FF;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#444;
+  font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{background-color:#409cff;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#fff;
+  font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-njvp{background-color:#38fff8;border-color:#68cbd0;text-align:center;vertical-align:top}
+.tg .tg-qrnh{background-color:#38fff8;border-color:inherit;color:#fe0000;text-align:center;vertical-align:top}
+.tg .tg-08qx{background-color:#34ff34;border-color:inherit;color:#000000;text-align:center;vertical-align:top}
+.tg .tg-io23{background-color:#f8ff00;border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
+.tg .tg-4rdo{background-color:#fe0000;border-color:inherit;color:#ffffff;font-size:12px;text-align:center;vertical-align:top}
+.tg .tg-2xbj{border-color:inherit;font-size:18px;font-weight:bold;text-align:center;vertical-align:top}
+.tg .tg-6ug1{background-color:#38fff8;border-color:inherit;color:#009901;text-align:center;vertical-align:top}
+.tg .tg-12d8{background-color:#cbcefb;border-color:inherit;font-size:12px;text-align:left;vertical-align:top}
+.tg .tg-m7lx{background-color:#34ff34;border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
+.tg .tg-f4iu{border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
+.tg .tg-7f8f{background-color:#9aff99;border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
+.tg .tg-lihr{background-color:#cbcefb;border-color:#9698ed;font-size:12px;text-align:left;vertical-align:top}
+.tg .tg-h7c6{background-color:#38fff8;border-color:inherit;text-align:center;vertical-align:top}
+</style>
+<table class="tg"><thead>
+  <tr>
+'
+
+table+='<th class="tg-2xbj" colspan="2">Status for <span style="background: #1723D0;padding: 2px">'$cluster_name'</span> on '`date +%b" "%d" "%T`'</th>
+  </tr></thead>
+  <tbody>'
+  
+table+='
+  <tr>
+    <td class="tg-08qx">Cluster is <span style="background: '$csb';padding: 2px">'$cs'</span> and <span style="background: '$cssb';padding: 2px">'$css'</span></td>
+    <td class="tg-08qx">qn: '$HANODE'</td>
+  </tr>
+'
 
 cluster_num_nodes=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_NUM_NODES\.0|clusterNumNodes.0" | cut -f3 -d" ")
-
 print_node_info $1
 
+else
+
+table='
+<HTML>
+<META HTTP-EQUIV="REFRESH" CONTENT="5">
+<HEAD><TITLE>Cluster Status Monitor</TITLE>
+'
+cluster_num_nodes=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_NUM_NODES\.0|clusterNumNodes.0" | cut -f3 -d" ")
+print_node_info $1
+
+fi
 
 }
 
@@ -471,37 +523,57 @@ get_node ()
 	VALUES=""
         while [ $# -ne 0 ]
         do
+            #echo "pinging $1"
         	ping -w 3 -c 1 $1 > /dev/null 2>&1
-        	if [ $? -eq 0 ]; then        	
-        		CLUSTER_MIB=$($SNMPCMD $1 1.3.6.1.4.1.2.3.1.2.1.5 2> /dev/null)
-        		LOGFILE="/tmp/$1.qhaslog"
-			HTMLFILE="/tmp/$1.qhashtml"
-			CGIFILE="/usr/IBMAHS/cgi-bin/`basename ${0}|cut -d "." -f 1`.cgi"
-			STATFILE="/tmp/$1.aastat"
-        		
-        		# is there any snmp info?
-	  		snmpinfocheck=`echo $CLUSTER_MIB | egrep "$CLUSTER_BRANCH|^cluster"`
-	  		if [[ $? -eq 0 && $snmpinfocheck != "" ]]; then
-                		print_cluster_info $1 > $LOGFILE
-                		cat $LOGFILE 
-				cp $LOGFILE $HTMLFILE
-          		else
-                		echo "Data unavailable on NODE: $1 
-				$(date +%d" "%b" "%y" "%T)
-				Check cluster node state" | tee $HTMLFILE
-				#service clsmon reload-script `basename $0` &
-				shift
-          		fi
+            	if [ $? -eq 0 ]; then        	
+                	CLUSTER_MIB=$($SNMPCMD $1 1.3.6.1.4.1.2.3.1.2.1.5 2> /dev/null)
+                	LOGFILE="/tmp/$1.qhaslog"
+			        #HTMLFILE="/tmp/$1.qhashtml"
+			        CGIFILE="/tmp/`basename ${0}|cut -d "." -f 1`.cgi"
+			        STATFILE="/tmp/$1.aastat"
+                	
+                	cluster_name=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_NAME\.0|clusterName.0" | cut -f2 -d\")
+                		# is there any snmp info?
+	          		snmpinfocheck=`echo $CLUSTER_MIB | egrep "$CLUSTER_BRANCH|^cluster"`
+	      		#echo "snmp check: $snmpinfocheck"
+	          		if [[ $? -eq 0 && $snmpinfocheck != "" && $cluster_name != "" ]]; then
+                        		print_cluster_info $1 > $LOGFILE
+                        		cat $LOGFILE 
+				        #cp $LOGFILE $HTMLFILE
+				        echo $table > $HTMLFILE
+                  	else
+                        #		echo "Data unavailable on NODE: $1 
+				        #$(date +%d" "%b" "%y" "%T)
+				        #Check cluster node state" | tee $HTMLFILE
+				        #service clsmon reload-script `basename $0` &
+				        table='
+				        <HTML>
+                        <META HTTP-EQUIV="REFRESH" CONTENT="5">
+                        <HEAD><TITLE>Cluster Status Monitor</TITLE>
+				        Data unavailable on NODE: '$1'
+				        '`date +%b" "%d" "%T`'
+				        Check cluster node state
+				        '
+				        echo $table > $HTMLFILE
+				        shift
+                  	fi
 
-			format_cgi
-        	else
-        		VALUES="$VALUES $1 "
-        		shift   
-        	fi
+            	else
+            		VALUES="$VALUES $1 "
+            		shift   
+            	fi
         done
         
-        echo "Warning: nodes $VALUES are not responding.
-        	$(date +%d" "%b" "%y" "%T)" | tee $HTMLFILE
+        echo "Warning: nodes $VALUES are not responding. $(date +%b" "%d" "%T)"
+        table='
+				<HTML>
+                <META HTTP-EQUIV="REFRESH" CONTENT="5">
+                <HEAD><TITLE>Cluster Status Monitor</TITLE>
+                Warning: '$VALUES' not responding.
+                '`date +%b" "%d" "%T`'
+        '
+        echo $table > $HTMLFILE
+        
         
 
 }
@@ -531,6 +603,7 @@ while true
 do
 
 	get_node $NODES
+	sleep 3
 
 done
 
