@@ -41,7 +41,13 @@ NODES="192.168.123.100 192.168.123.102"
 OSTYPE=`uname`
 HACMPDEFS="/hacmp.defs"
 cluster_name="aix_cluster"
+static_name=$cluster_name
 HTMLFILE="/var/www/clsmon/$cluster_name.html"
+CSVFILE="/var/www/clsmon/clusters.csv"
+CSV=$static_name',UNKNOWN,UNKNOWN,0'
+REFRESH=5
+SEDCMD="/bin/sed -i"
+counter=0
 
 #******ONLY alter the code below this line, if you want to change******
 #********************this behaviour of this script*********************
@@ -86,7 +92,7 @@ PROGNAME=$(basename ${0})
 
 ###############################################################################
 # 
-#  Identify OS and defines snmp command
+#  Identify OS and defines snmp and sed commands path
 #
 ###############################################################################
 
@@ -95,7 +101,8 @@ case $OSTYPE in
  
   AIX)
      if [[ -f $HACMPDEFS ]];then
-  	SNMPCMD="snmpinfo -m dump -t 1 -v -c $COMMUNITY -o $HACMPDEFS -h" 
+  	SNMPCMD="snmpinfo -m dump -t 1 -v -c $COMMUNITY -o $HACMPDEFS -h"
+  	SEDCMD="/opt/freeware/bin/sed -i"
      else
   	echo "$HACMPDEFS file not found. Exiting." ; exit
      fi
@@ -189,6 +196,7 @@ if [[ $RGS_COUNT -gt 0 ]];then
         <tr>
             <td class="tg-12d8">Resourse Groups:</td>
             <td class="tg-12d8"></td>
+        </tr>
         '
 fi
 
@@ -253,6 +261,7 @@ if [ $OFFLINE = "TRUE" ]; then
 fi
 
 done
+
 }
 
 ###############################################################################
@@ -337,7 +346,7 @@ print_node_info()
   
 
   NODE_ID_COUNTER=0
-
+  CSV=$cluster_name','$cs','$css','$cluster_num_nodes
   while [[ $cluster_num_nodes -ne 0 ]]
   do
     # Get node information for each node
@@ -359,6 +368,9 @@ print_node_info()
     echo ""
     printf "Node : $formatted_node_name State: " "$formatted_node_name"
     table+='
+    <div style="display: inline-flex">
+    <table class="tg" style="margin-left: 5px">
+    <thead> 
     <tr>
         <td class="tg-njvp">Node: '$formatted_node_name'</td>
     '
@@ -382,7 +394,10 @@ print_node_info()
           ;;
     esac
     
-      table+='</tr>'
+      table+='</tr>
+            </thead>
+            <tbody>
+      '
     
     NETWORK_MIB_FUNC=$NETWORK_MIB #`echo "$NETWORK_MIB" | egrep "$NETWORK_BRANCH\..\.$node_id|net*\..\.$node_id"`
     ADDRESS_MIB_FUNC=$ADDRESS_MIB #`echo "$ADDRESS_MIB" | egrep "$ADDRESS_BRANCH\..\.$node_id|addr*\..\.$node_id"`
@@ -456,38 +471,17 @@ if [[ $cluster_name != "" ]]; then
 	  ;;
   esac
 
-echo "Status for $cluster_name on $(date +%b" "%d" "%T)" 
+echo "Status for $cluster_name at $(date +%b" "%d" "%T)" 
 echo  "Cluster is ($cs & $css)    qn: $HANODE"
 
 table='
-<HTML>
-<META HTTP-EQUIV="REFRESH" CONTENT="5">
-<HEAD><TITLE>Cluster Status Monitor</TITLE>
-<style type="text/css">
-.tg  {border-collapse:collapse;border-color:#9ABAD9;border-spacing:0;border-style:solid;border-width:1px;}
-.tg td{background-color:#EBF5FF;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#444;
-  font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{background-color:#409cff;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#fff;
-  font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-njvp{background-color:#38fff8;border-color:#68cbd0;text-align:center;vertical-align:top}
-.tg .tg-qrnh{background-color:#38fff8;border-color:inherit;color:#fe0000;text-align:center;vertical-align:top}
-.tg .tg-08qx{background-color:#34ff34;border-color:inherit;color:#000000;text-align:center;vertical-align:top}
-.tg .tg-io23{background-color:#f8ff00;border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
-.tg .tg-4rdo{background-color:#fe0000;border-color:inherit;color:#ffffff;font-size:12px;text-align:center;vertical-align:top}
-.tg .tg-2xbj{border-color:inherit;font-size:18px;font-weight:bold;text-align:center;vertical-align:top}
-.tg .tg-6ug1{background-color:#38fff8;border-color:inherit;color:#009901;text-align:center;vertical-align:top}
-.tg .tg-12d8{background-color:#cbcefb;border-color:inherit;font-size:12px;text-align:left;vertical-align:top}
-.tg .tg-m7lx{background-color:#34ff34;border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
-.tg .tg-f4iu{border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
-.tg .tg-7f8f{background-color:#9aff99;border-color:inherit;font-size:12px;text-align:center;vertical-align:top}
-.tg .tg-lihr{background-color:#cbcefb;border-color:#9698ed;font-size:12px;text-align:left;vertical-align:top}
-.tg .tg-h7c6{background-color:#38fff8;border-color:inherit;text-align:center;vertical-align:top}
-</style>
+<div style="margin-left: 5px;display: grid">
 <table class="tg"><thead>
   <tr>
 '
 
-table+='<th class="tg-2xbj" colspan="2">Status for <span style="background: #1723D0;padding: 2px">'$cluster_name'</span> on '`date +%b" "%d" "%T`'</th>
+#table+='<th class="tg-2xbj" colspan="2">Status for <span style="background: #1723D0;padding: 2px">'$cluster_name'</span> at '`date +%b" "%d" "%T`'</th>
+table+='<th class="tg-2xbj" colspan="2">Status for '$cluster_name' at '`date +%b" "%d" "%T`'</th>
   </tr></thead>
   <tbody>'
   
@@ -496,7 +490,13 @@ table+='
     <td class="tg-08qx">Cluster is <span style="background: '$csb';padding: 2px">'$cs'</span> and <span style="background: '$cssb';padding: 2px">'$css'</span></td>
     <td class="tg-08qx">qn: '$HANODE'</td>
   </tr>
+  </tbody>
+</table>
+</div>
+<br><br>
 '
+
+
 
 cluster_num_nodes=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_NUM_NODES\.0|clusterNumNodes.0" | cut -f3 -d" ")
 print_node_info $1
@@ -504,18 +504,32 @@ print_node_info $1
 else
 
 table='
-<HTML>
-<META HTTP-EQUIV="REFRESH" CONTENT="5">
-<HEAD><TITLE>Cluster Status Monitor</TITLE>
+        <div class="jumbotron" style="color:black">
+        </div>
 '
 cluster_num_nodes=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_NUM_NODES\.0|clusterNumNodes.0" | cut -f3 -d" ")
+  
+  CSV=$cluster_name','$cs','$css','$cluster_num_nodes
+
 print_node_info $1
 
 fi
 
 }
 
+format_csv ()
+{
 
+    grep "$cluster_name," $CSVFILE > /dev/null 2>&1
+    if [ $? -eq 0 ];then
+        echo $cluster_name' is on file'
+        $SEDCMD 's/.*'$cluster_name',.*/'$CSV'/' $CSVFILE
+    else
+        echo $cluster_name' is not on file'
+        echo $CSV >> $CSVFILE
+    fi
+
+}
 
 get_node ()
 {
@@ -528,9 +542,6 @@ get_node ()
             	if [ $? -eq 0 ]; then        	
                 	CLUSTER_MIB=$($SNMPCMD $1 1.3.6.1.4.1.2.3.1.2.1.5 2> /dev/null)
                 	LOGFILE="/tmp/$1.qhaslog"
-			        #HTMLFILE="/tmp/$1.qhashtml"
-			        CGIFILE="/tmp/`basename ${0}|cut -d "." -f 1`.cgi"
-			        STATFILE="/tmp/$1.aastat"
                 	
                 	cluster_name=$(echo "$CLUSTER_MIB" | egrep -w "$CLUSTER_NAME\.0|clusterName.0" | cut -f2 -d\")
                 		# is there any snmp info?
@@ -539,22 +550,30 @@ get_node ()
 	          		if [[ $? -eq 0 && $snmpinfocheck != "" && $cluster_name != "" ]]; then
                         		print_cluster_info $1 > $LOGFILE
                         		cat $LOGFILE 
-				        #cp $LOGFILE $HTMLFILE
+
 				        echo $table > $HTMLFILE
+				        echo "CSV: "$CSV
+				        format_csv
+				        sleep $REFRESH
                   	else
                         #		echo "Data unavailable on NODE: $1 
 				        #$(date +%d" "%b" "%y" "%T)
 				        #Check cluster node state" | tee $HTMLFILE
 				        #service clsmon reload-script `basename $0` &
 				        table='
-				        <HTML>
-                        <META HTTP-EQUIV="REFRESH" CONTENT="5">
-                        <HEAD><TITLE>Cluster Status Monitor</TITLE>
-				        Data unavailable on NODE: '$1'
+                <div class="jumbotron" style="color:black">
+				        Node '$1' is up but data is unavailable at 
 				        '`date +%b" "%d" "%T`'
-				        Check cluster node state
+				        . Please check cluster services on node.
+			    </div>
 				        '
-				        echo $table > $HTMLFILE
+                        if [ $counter -gt 99 ];then
+                            echo $table > $HTMLFILE
+                            CSV=$static_name',UNKNOWN,UNKNOWN,0'
+                            cluster_name=$static_name
+                            format_csv
+                            counter=0
+                        fi
 				        shift
                   	fi
 
@@ -564,17 +583,22 @@ get_node ()
             	fi
         done
         
-        echo "Warning: nodes $VALUES are not responding. $(date +%b" "%d" "%T)"
+        echo "Warning: $VALUES no snmp data at $(date +%b" "%d" "%T). Please check if $NODES are up and cluster services are running."
         table='
-				<HTML>
-                <META HTTP-EQUIV="REFRESH" CONTENT="5">
-                <HEAD><TITLE>Cluster Status Monitor</TITLE>
-                Warning: '$VALUES' not responding.
-                '`date +%b" "%d" "%T`'
+                <div class="jumbotron" style="color:black">
+                    Warning: '$VALUES' no snmp data at 
+                    '`date +%b" "%d" "%T`'. Please check if '$NODES' are up and cluster services are running.
+                </div>
         '
-        echo $table > $HTMLFILE
-        
-        
+
+        counter=$((counter+1))
+        if [ $counter -gt 99 ];then
+            echo $table > $HTMLFILE
+            CSV=$static_name',UNKNOWN,UNKNOWN,0'
+            cluster_name=$static_name
+            format_csv
+            counter=0
+        fi
 
 }
 
@@ -598,12 +622,11 @@ done
 
 ################ get the nodes and start
 
-
+format_csv #add cluster to clusters.csv file
 while true
 do
 
 	get_node $NODES
-	sleep 3
 
 done
 
