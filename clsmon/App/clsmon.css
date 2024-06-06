@@ -1,0 +1,39 @@
+   table.button_table {
+     table-layout:fixed;
+     border-collapse: separate;
+     border-spacing: 0.19em;
+   }
+
+   table.button_table td{
+     font: bold 12px Arial;
+     cursor:pointer;
+     border: 0.19em solid #CCCCCC;
+     background-color: #EEEEEE;
+   }
+
+   #bottom {
+     position: fixed;
+     width:100%;
+     padding:1em 1em 1em 2em;
+     max-height: 30em;
+     left:0;
+     bottom: 0;
+     border-top: 2px solid #AAAAAA;
+   }
+   
+.tg {border-collapse:collapse;border-color:#9ABAD9;border-spacing:0;border-style:solid;border-width:1px;} 
+.tg td{background-color:#EBF5FF;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#444; font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;} 
+.tg th{background-color:#409cff;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#fff; font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;} 
+.tg .tg-njvp{background-color:#004f89;color:white;border-color:#68cbd0;text-align:center;vertical-align:top} 
+.tg .tg-qrnh{background-color:#004f89;border-color:inherit;color:#fe0000;text-align:center;vertical-align:top} 
+.tg .tg-08qx{background-color:#cbcefb;border-color:inherit;color:#000000;text-align:center;vertical-align:top} 
+.tg .tg-io23{background-color:#f8ff00;border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-4rdo{background-color:#fe0000;border-color:inherit;color:#ffffff;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-2xbj{background-color:#004f89;border-color:inherit;font-size:18px;font-weight:bold;text-align:center;vertical-align:top} 
+.tg .tg-6ug1{background-color:#004f89;border-color:inherit;color:#009901;text-align:center;vertical-align:top} 
+.tg .tg-12d8{background-color:#cbcefb;border-color:inherit;font-size:12px;text-align:left;vertical-align:top} 
+.tg .tg-m7lx{background-color:#34ff34;border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-f4iu{border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-7f8f{background-color:#9aff99;border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-lihr{background-color:#cbcefb;border-color:#9698ed;font-size:12px;text-align:left;vertical-align:top} 
+.tg .tg-h7c6{background-color:#38fff8;border-color:inherit;text-align:center;vertical-align:top}
