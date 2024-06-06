@@ -1,0 +1,348 @@
+<HTML>  <HEAD><TITLE>Cluster Status Monitor</TITLE>
+<style type="text/css">
+.tg {border-collapse:collapse;border-color:#9ABAD9;border-spacing:0;border-style:solid;border-width:1px;} 
+.tg td{background-color:#EBF5FF;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#444; font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;} 
+.tg th{background-color:#409cff;border-color:#9ABAD9;border-style:solid;border-width:0px;color:#fff; font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;} 
+.tg .tg-njvp{background-color:#004f89;color:white;border-color:#68cbd0;text-align:center;vertical-align:top} 
+.tg .tg-qrnh{background-color:#004f89;border-color:inherit;color:#fe0000;text-align:center;vertical-align:top} 
+.tg .tg-08qx{background-color:#cbcefb;border-color:inherit;color:#000000;text-align:center;vertical-align:top} 
+.tg .tg-io23{background-color:#f8ff00;border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-4rdo{background-color:#fe0000;border-color:inherit;color:#ffffff;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-2xbj{background-color:#004f89;border-color:inherit;font-size:18px;font-weight:bold;text-align:center;vertical-align:top} 
+.tg .tg-6ug1{background-color:#004f89;border-color:inherit;color:#009901;text-align:center;vertical-align:top} 
+.tg .tg-12d8{background-color:#cbcefb;border-color:inherit;font-size:12px;text-align:left;vertical-align:top} 
+.tg .tg-m7lx{background-color:#34ff34;border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-f4iu{border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-7f8f{background-color:#9aff99;border-color:inherit;font-size:12px;text-align:center;vertical-align:top} 
+.tg .tg-lihr{background-color:#cbcefb;border-color:#9698ed;font-size:12px;text-align:left;vertical-align:top} 
+.tg .tg-h7c6{background-color:#38fff8;border-color:inherit;text-align:center;vertical-align:top}
+</style>
+
+<div style="margin-left: 5px;display: grid">
+
+<table class="tg">
+<thead> 
+<tr> 
+    <th class="tg-2xbj" colspan="2">Status for aix_cluster at May 29 17:28:48</th>
+</tr>
+</thead> 
+<tbody> 
+<tr>
+    <td class="tg-08qx">Cluster is <span style="background: #56CA36;padding: 2px">UP</span> and <span style="background: #56CA36;padding: 2px">STABLE</span></td>
+    <td class="tg-08qx">qn: 192.168.123.100</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<br><br>
+
+
+<div style="display: inline-flex">
+<table class="tg" style="margin-left: 5px">
+<thead> 
+<tr>
+    <td class="tg-njvp">Node: node01 </td> <td class="tg-6ug1"><span style="background: #56CA36;padding: 2px;color: black">UP</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb1</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr> 
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.10 hacluster01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.100 node01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.110 haprod01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.100.10 service</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-7f8f">ONLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+
+<table class="tg" style="margin-left: 5px">
+<thead>
+<tr>
+    <td class="tg-njvp">Node: node02 </td> <td class="tg-qrnh"><span style="background: red;padding: 2px;color: white">DOWN</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb2</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.20 hacluster02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.102 node02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.120 haprod02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-4rdo">OFFLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+
+<table class="tg" style="margin-left: 5px">
+<thead>
+<tr>
+    <td class="tg-njvp">Node: node03 </td> <td class="tg-6ug1"><span style="background: #56CA36;padding: 2px;color: black">UP</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb3</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr> 
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.30 hacluster01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.103 node01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.130 haprod01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-7f8f">ONLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+<table class="tg" style="margin-left: 5px">
+<thead>
+<tr>
+    <td class="tg-njvp">Node: node04 </td> <td class="tg-qrnh"><span style="background: red;padding: 2px;color: white">DOWN</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb4</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.40 hacluster02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.104 node02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.140 haprod02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-4rdo">OFFLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+
+<table class="tg" style="margin-left: 5px">
+<thead>
+<tr>
+    <td class="tg-njvp">Node: node05 </td> <td class="tg-qrnh"><span style="background: red;padding: 2px;color: white">DOWN</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb5</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.50 hacluster02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.105 node02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.150 haprod02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-4rdo">OFFLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+<table class="tg" style="margin-left: 5px">
+<thead>
+<tr>
+    <td class="tg-njvp">Node: node06 </td> <td class="tg-6ug1"><span style="background: #56CA36;padding: 2px;color: black">UP</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb6</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr> 
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.60 hacluster01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.106 node01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.160 haprod01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-7f8f">ONLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+<table class="tg" style="margin-left: 5px">
+<thead>
+<tr>
+    <td class="tg-njvp">Node: node07 </td> <td class="tg-qrnh"><span style="background: red;padding: 2px;color: white">DOWN</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb7</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.70 hacluster02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.107 node02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.170 haprod02</td> <td class="tg-4rdo">DOWN</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-4rdo">OFFLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+
+<table class="tg" style="margin-left: 5px">
+<thead>
+<tr>
+    <td class="tg-njvp">Node: node08 </td> <td class="tg-6ug1"><span style="background: #56CA36;padding: 2px;color: black">UP</span></td>
+</tr>
+</thead>
+<tbody>
+<tr> 
+    <td class="tg-12d8">Network: net_diskhb_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">0.0.0.1 aix72_diskhb8</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr> 
+    <td class="tg-12d8">Network: net_ether_01 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.1.80 hacluster01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">192.168.123.108 node01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Network: net_ether_02 </td> <td class="tg-m7lx">UP</td>
+</tr>
+<tr>
+    <td class="tg-f4iu">10.16.0.180 haprod01</td> <td class="tg-7f8f">UP</td>
+</tr>
+<tr>
+    <td class="tg-12d8">Resourse Groups:</td> <td class="tg-12d8"></td>
+<tr/>
+<tr>
+    <td class="tg-f4iu">aixRG</td> <td class="tg-7f8f">ONLINE</td>
+</tr>
+</tbody>
+</table><br>
+
+</div>
+
+
+

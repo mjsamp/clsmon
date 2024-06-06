@@ -1,0 +1,15 @@
+cluster_name,cs,css,nodes
+aix_cluster_0,UP,STABLE,2
+aix_cluster_1,UP,STABLE,2
+aix_cluster_2,UNKNOWN,UNSTABLE,2
+aix_cluster_3,UP,STABLE,2
+aix_cluster_4,UP,UNSTABLE,2
+aix_cluster_5,UP,STABLE,2
+aix_cluster_6,UP,STABLE,2
+aix_cluster_7,UP,STABLE,2
+aix_cluster_8,UP,UNSTABLE,2
+aix_cluster_9,UP,STABLE,2
+aix_cluster_10,UP,STABLE,2
+aix_cluster_11,UP,STABLE,2
+aix_cluster_12,UP,STABLE,2
+aix_cluster,UP,STABLE,2
