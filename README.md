@@ -20,6 +20,8 @@ ksh (Korn Shell)
 
 HTTP Server (tested in apache only)
 
+GNU sed
+
 snmpwalk (Linux)
 
 snmpinfo (AIX)
@@ -37,10 +39,14 @@ Considering you have an up and running Apache server on your machine add the fol
 Alias /clsmon /var/www/clsmon
 
 ```
+Then copy the folder clsmon to your server /var/www folder and change its owner to your http server user:
+```bash
+chown -R www-data.www-data /var/www/clsmon
+```
 
 ## Variables
 
-Replace variables in your script to appropriate values according to your environment.
+Replace variables in your script to appropriate values to reflect your environment settings.
 
 ```bash
 COMMUNITY="public"
@@ -48,13 +54,16 @@ NODES="node1 192.168.1.1"
 HACMPDEFS="/hacmp.defs" --> path to hacmp.defs file (needed only in AIX)
 cluster_name="aix_cluster"
 HTMLFILE="/var/www/clsmon/$cluster_name.html"
+CSVFILE="/var/www/clsmon/clusters.csv"
+REFRESH=5
+SEDCMD="/bin/sed -i"
 ```
 
 ## Run
 
-Run the script then access the web interface at this path as an example:
+Run the script then access the MultiCluster WebView interface on this path:
 
-https://your_web_server/clsmon/aix_cluster.html
+https://your_web_server/clsmon/index.html
 
 
 ##
