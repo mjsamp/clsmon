@@ -552,7 +552,7 @@ get_node ()
                         		cat $LOGFILE 
 
 				        echo $table > $HTMLFILE
-				        echo "CSV: "$CSV
+				        #echo "CSV: "$CSV
 				        format_csv
 				        sleep $REFRESH
                   	else
