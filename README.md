@@ -111,7 +111,7 @@ startsrc -s hostmibd
 stopsrc -s clinfoES
 startsrc -s clinfoES
 ```
-![IMAGE ALT TEXT HERE](./images/Screenshot%20at%202024-05-29%2015-51-51.png)
+![IMAGE ALT TEXT HERE](./images/Screenshot%20at%202024-06-05%2023-31-49.png)
 
 Watch it in action.\
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/x7CUh0MCn38/0.jpg)](https://www.youtube.com/watch?v=x7CUh0MCn38)\
