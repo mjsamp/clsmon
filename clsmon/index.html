@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="Content/dx.common.css" rel="stylesheet" />
+    <link href="Content/dx.light.css" rel="stylesheet" />
+    <link href="App/app.css" rel="stylesheet" />
+    <link href="App/clsmon.css" rel="stylesheet" />
+</head>
+<body ng-app="portalApp" ng-controller="clusterController" ng-init="init()" ng-style="{'background-color':bgcolor}">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#" ng-click="draw('clusters')">Clsmon</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#" ng-click="draw('about')">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="container-frame" class="container"  style="width:98%;color:white">
+        <div  ng-view class="jumbotron">
+        </div>
+    </div>
+
+
+    <div style="position:relative;"></div> <!-- For the next part, so that it's relative to this div. Othewise, things get a bit skewed -->
+    <div id="bottom" style="display:grid" ng-style="{'background-color':bottom_bgcolor}">
+       <table id="button_table" ng-style="btablestyle" class="button_table" ng-hide="hidebuttons""> 
+         <tr ng-repeat="row in buttonarray">
+           <td ng-repeat="button in row.items" ng-click="draw(button.label);gettitle(button.value);addremoveskill(button.value)" ng-style="btnstyle(button.substate,button.label)">{{button.label}}</td> 
+         </tr>
+       </table>
+
+    </div>
+
+    <script src="Scripts/jquery-1.11.3.min.js"></script>
+    <script src="Scripts/jquery.globalize/globalize.js"></script>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/angular-route.min.js"></script>
+    <script src="Scripts/angular-sanitize.min.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+
+
+    <!--application scripts-->
+    <script src="App/app.js"></script>
+    <script src="App/clusterController.js"></script>
+
+
+</body>
+</html>
