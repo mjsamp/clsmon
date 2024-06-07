@@ -38,14 +38,12 @@ angular.module('portalApp')
             if (callback && (typeof callback === 'function')) {
                 return callback(result);
             }
-            console.log(result);
+            //console.log(result);
             return result;
   }
 
 
       $scope.refresh = function() {
-        //$scope.reloadvar = setTimeout(function() {$scope.getdata();}, 10000);
-
             $http.get('/clsmon/clusters.csv').then(function(response){
                 //console.log(response.data);
                 csv = response.data;
@@ -59,11 +57,10 @@ angular.module('portalApp')
             $scope.clusters = csv2json(csv);
             $scope.draw($scope.home);
             $scope.init();
-            console.log("refresh");
+            //console.log("refresh");
       }
 
       $scope.draw = function(home) {
-        //$scope.reloadvar = setTimeout(function() {$scope.getdata();}, 10000);
             $http.get('/clsmon/'+home+'.html').then(function(response){
                 //console.log(response.data);
                 html = response.data;
@@ -76,7 +73,7 @@ angular.module('portalApp')
 
         document.getElementById("container-frame").innerHTML= html;
         $scope.home = home;
-        console.log("draw: "+home);
+        //console.log("draw: "+home);
 
       }
 
@@ -101,10 +98,7 @@ angular.module('portalApp')
         }
      
       for (var b=0; b < $scope.clusters.length; b++) {
-      
-                console.log("css1: "+$scope.clusters[b].css);
 
-            
               if(buttoncount < btn_per_row) {
                 tmpbtnsetuparray.push({value:$scope.clusters[b].nodes,label:$scope.clusters[b].cluster_name,substate:$scope.clusters[b].css});
                 buttoncount++;
@@ -148,8 +142,7 @@ angular.module('portalApp')
         if (label == $scope.home) {
             styletext.border = '0.25em solid orange';
         }
-        //styletext.backgroundColor = bgColor//'#212c35';
-        //styletext.color = fColor;//'white';
+
 
         return styletext;
       }  
