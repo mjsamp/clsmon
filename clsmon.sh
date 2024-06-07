@@ -522,10 +522,10 @@ format_csv ()
 
     grep "$cluster_name," $CSVFILE > /dev/null 2>&1
     if [ $? -eq 0 ];then
-        echo $cluster_name' is on file'
+        #echo $cluster_name' is on file'
         $SEDCMD 's/.*'$cluster_name',.*/'$CSV'/' $CSVFILE
     else
-        echo $cluster_name' is not on file'
+        #echo $cluster_name' is not on file'
         echo $CSV >> $CSVFILE
     fi
 
