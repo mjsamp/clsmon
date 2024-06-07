@@ -135,7 +135,7 @@ angular.module('portalApp')
                   styletext.color = 'black';  
                 }
                 
-                if (substate == "UNKNOWN") {
+                if (substate == "UNKNOWN" || substate == "DOWN" || substate == "ERROR" || substate == "RECONFIG") {
                   styletext.backgroundColor = 'red';
                   styletext.color = 'white';
 
