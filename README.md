@@ -18,7 +18,7 @@
 
 ksh (Korn Shell)
 
-HTTP Server (tested in apache only)
+HTTP Server (tested on apache only)
 
 GNU sed
 
