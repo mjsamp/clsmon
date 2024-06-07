@@ -123,7 +123,7 @@ startsrc -s clinfoES
 ![IMAGE ALT TEXT HERE](./images/Screenshot%20at%202024-06-05%2023-31-49.png)
 
 Watch it in action.\
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/x7CUh0MCn38/0.jpg)](https://www.youtube.com/watch?v=x7CUh0MCn38)\
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/nUw7zBX3Slo/0.jpg)](https://www.youtube.com/watch?v=nUw7zBX3Slo)
 
 ## Buy me a coffee
 
